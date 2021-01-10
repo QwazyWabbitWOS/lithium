@@ -44,7 +44,7 @@ gitem_t	*GetItemByIndex (int index)
 {
 	if (index == 0 || index >= game.num_items)
 		return NULL;
-
+	else
 	return &itemlist[index];
 }
 
@@ -99,47 +99,61 @@ gitem_t	*FindItem (char *pickup_name)
 
 void DoRespawn (edict_t *ent)
 {
+	if (ent == NULL)
+	{
+		gi.dprintf("NULL ent passed to %s\n", __func__);
+		return;
+	}
 	if (ent->team)
 	{
 		edict_t	*master;
-		int	count;
-		int choice;
+		unsigned	count;
+		unsigned	choice;
 
+		if (ent == NULL)
+		{
+			gi.dprintf("NULL ent passed to %s\n", __func__);
+			return;
+		}
 		master = ent->teammaster;
+		if (master == NULL)
+			return;
 
-//ZOID
-//in ctf, when we are weapons stay, only the master of a team of weapons
-//is spawned
+		//ZOID
+		//in ctf, when we are weapons stay, only the master of a team of weapons
+		//is spawned
 		if (ctf->value &&
 			((int)dmflags->value & DF_WEAPONS_STAY) &&
 			master->item && (master->item->flags & IT_WEAPON))
 			ent = master;
-		else {
-//ZOID
-			for (count = 0, ent = master; ent; ent = ent->chain, count++)
-				;
+		else 
+		{
+			count = 0;
+			for (ent = master; ent; ent = ent->chain)
+				count++;
 
-			choice = rand() % count;
+			choice = count ? rand() % count : 0;
 
-			assert(ent != NULL);
-			for (count = 0, ent = master; count < choice; ent = ent->chain, count++)
-				;
+			count = 0;
+			for (ent = master; count < choice; ent = ent->chain)
+				count++;
 		}
 	}
 
-	assert(ent != NULL);
-	ent->svflags &= ~SVF_NOCLIENT;
-	ent->solid = SOLID_TRIGGER;
-	gi.linkentity (ent);
+	if (ent)
+	{
+		ent->svflags &= ~SVF_NOCLIENT;
+		ent->solid = SOLID_TRIGGER;
+		gi.linkentity(ent);
 
-	// send an effect
-	ent->s.event = EV_ITEM_RESPAWN;
+		// send an effect
+		ent->s.event = EV_ITEM_RESPAWN;
 
-	//WF
-//	Rune_MaybeSpawn(ent->s.origin);
-	Pack_MaybeSpawn(ent->s.origin);
-	//WF
-
+		//WF
+	//	Rune_MaybeSpawn(ent->s.origin);
+		Pack_MaybeSpawn(ent->s.origin);
+		//WF
+	}
 }
 
 void SetRespawn (edict_t *ent, float delay)
