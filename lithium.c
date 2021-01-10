@@ -1674,6 +1674,8 @@ void CTFSetIDView(edict_t *ent) {
 	float bd = 0, d;
 	int i;
 
+	if (!ent)
+		return;
 	if(ent->id_ent && level.framenum & 1)
 		return;
 
