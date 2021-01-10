@@ -7,29 +7,8 @@
 #
 # Requires GNU make
 #
-# This builds the gamei386.so for Linux based on the q2source_12_11.zip
-# release.  
-# Put his Makefile in the game subdirectory you get when you unzip
-# q2source_12_11.zip.
-#
-# There are two compiler errors you'll get, the following fixes
-# are necessary:
-#
-# In g_local.h (around line 828), you must change the 
-#    typedef struct g_client_s { ... } gclient_t;
-# to just:
-#    struct g_client_s { ... };
-# The typedef is already defined elsewhere (seems to compile fine under
-# MSCV++ for Win32 for some reason).
-#
-# m_player.h has a Ctrl-Z at the end (damn DOS editors).  Remove it or
-# gcc complains.
-#
-# Note that the source in q2source_12_11.zip is for version 3.05.  To
-# get it to run with Linux 3.10, change the following in game.h:
-#    #define    GAME_API_VERSION        1
-# change it to:
-#    #define    GAME_API_VERSION        2
+# This builds the gamex86_64.so or gamei386.so for Linux.
+# Type make all or setarch i386 make all accordingly.
 
 # this nice line comes from the linux kernel makefile
 ARCH := $(shell uname -m | sed -e s/i.86/i386/ -e s/sun4u/sparc64/ -e s/arm.*/arm/ -e s/sa110/arm/ -e s/alpha/axp/)

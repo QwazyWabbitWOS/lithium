@@ -174,7 +174,4 @@
     </None>
     <None Include="Makefile" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="depend.txt" />
-  </ItemGroup>
 </Project>
