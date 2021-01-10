@@ -14,10 +14,15 @@
 ARCH := $(shell uname -m | sed -e s/i.86/i386/ -e s/sun4u/sparc64/ -e s/arm.*/arm/ -e s/sa110/arm/ -e s/alpha/axp/)
 CC=gcc
 
-#use these cflags to optimize it
-CFLAGS=-O3
-#use these when debugging 
-#CFLAGS=-g
+# This is for native build
+CFLAGS=-O3 -DARCH="$(ARCH)"
+# This is for 32-bit build on 64-bit host
+ifeq ($(ARCH),i386)
+CFLAGS =-m32 -O3 -fPIC -DARCH="$(ARCH)" -DSTDC_HEADERS -I/usr/include
+endif
+
+# use this when debugging
+#CFLAGS=-g -Og -DDEBUG -DARCH="$(ARCH)" -Wall -pedantic
 
 ifeq ($(shell uname),Linux)
 CFLAGS+=-DNEED_STRLCAT -DNEED_STRLCPY
