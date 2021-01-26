@@ -35,7 +35,7 @@
 place_t *first_place;
 
 char *Highscores_File(void) {
-	static char buf[64];
+	static char buf[128];
 	snprintf(buf, sizeof(buf), "%s/hiscores/%s.%02dm", gi.cvar("gamedir", 0, 0)->string,
 		level.mapname, (int)timelimit->value);
 	return buf;
