@@ -345,11 +345,12 @@ ED_NewString
 char *ED_NewString (char *string)
 {
 	char	*newb, *new_p;
-	int		i,l;
+	int		i;
+	size_t	l;
 	
 	l = strlen(string) + 1;
 
-	newb = gi.TagMalloc (l, TAG_LEVEL);
+	newb = gi.TagMalloc ((int)l, TAG_LEVEL);
 
 	new_p = newb;
 
@@ -386,7 +387,7 @@ void ED_ParseField (char *key, char *value, edict_t *ent)
 	field_t	*f;
 	byte	*b;
 	float	v;
-	vec3_t	vec;
+	vec3_t	vec = { 0 };
 
 	for (f=fields ; f->name ; f++)
 	{
@@ -405,7 +406,6 @@ void ED_ParseField (char *key, char *value, edict_t *ent)
 			case F_VECTOR:
 				if (sscanf(value, "%f %f %f", &vec[0], &vec[1], &vec[2]) != 3) {
 					gi.dprintf("WARNING: Vector field incomplete in %s, map: %s, field: %s\n", __func__, level.mapname, f->name);
-					VectorClear(vec);
 				}
 				((float*)(b + f->ofs))[0] = vec[0];
 				((float*)(b + f->ofs))[1] = vec[1];
