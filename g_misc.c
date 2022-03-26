@@ -305,7 +305,7 @@ void BecomeExplosion1 (edict_t *self)
 	if (strcmp(self->classname, "item_flag_team2") == 0) {
 		CTFResetFlag(CTF_TEAM2); // this will free self!
 		gi.bprintf(PRINT_HIGH, "The %s flag has returned!\n",
-			CTFTeamName(CTF_TEAM1));
+			CTFTeamName(CTF_TEAM2));
 		return;
 	}
 	// techs are important too
@@ -1583,7 +1583,8 @@ void SP_target_character (edict_t *self)
 void target_string_use (edict_t *self, edict_t *other, edict_t *activator)
 {
 	edict_t *e;
-	int		n, l;
+	int		n;
+	size_t	l;
 	char	c;
 
 	l = strlen(self->message);
