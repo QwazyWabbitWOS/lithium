@@ -155,9 +155,9 @@ char *Menu_GetLine(edict_t *ent, menuline_t *menuline, qboolean sel) {
 		if(strchr(menuline->data, 'l'))
 			x = 8;
 		else if(strchr(menuline->data, 'm'))
-			x = ((256 - MARGIN_X * 2) - strlen(menuline->text) * 8) / 2;
+			x = ((256 - MARGIN_X * 2) - (int)strlen(menuline->text) * 8) / 2;
 		else if (strchr(menuline->data, 'r'))
-			x = (256 - MARGIN_X * 2) - strlen(menuline->text) * 8;
+			x = (256 - MARGIN_X * 2) - (int)strlen(menuline->text) * 8;
 	}
 
 	if(menuline->selectable) {
@@ -232,7 +232,7 @@ char *Menu_GetLine(edict_t *ent, menuline_t *menuline, qboolean sel) {
 
 	if(sel) {
 		strlcpy(format, string, sizeof(format));
-		snprintf(string, sizeof(string), "> %-24s <", format);
+		Com_sprintf(string, sizeof(string), "> %-24s <", format);
 		x -= 16;
 		colored = true;
 	}
@@ -300,7 +300,7 @@ int Menu_Draw(edict_t *ent) {
 	gi.WriteString(string);
 	gi.unicast(ent, true);
 
-	return strlen(string);
+	return (int)strlen(string);
 }
 
 int Menu_UpdateLine(edict_t *ent) {
@@ -317,7 +317,7 @@ int Menu_UpdateLine(edict_t *ent) {
 	gi.WriteString(string);
 	gi.unicast(ent, true);
 
-	return strlen(string);
+	return (int)strlen(string);
 }
 
 int Menu_Update(edict_t *ent) {

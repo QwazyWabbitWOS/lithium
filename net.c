@@ -35,8 +35,8 @@
 #define MAX_LISTEN 512
 #define MAX_BACKLOG 16
 
-int ssock = 0;
-int rsock[MAX_LISTEN];
+SOCKET ssock = 0;
+SOCKET rsock[MAX_LISTEN];
 struct sockaddr_in raddr[MAX_LISTEN];
 char *recvbuf[MAX_LISTEN];
 char *recvpos[MAX_LISTEN];
@@ -80,7 +80,7 @@ void Net_Exit(void) {
 }
 
 // this does a little more then set non-blocking now...
-int Net_SetNonBlocking(int sock) {
+int Net_SetNonBlocking(SOCKET sock) {
 	static int argp = 1;
 	struct linger l;
 	l.l_onoff = 0;
@@ -139,10 +139,10 @@ void Net_StopListen(void) {
 	shutdown(ssock, 2);
 }
 
-int Net_Check(void) {
+SOCKET Net_Check(void) {
 	int i;
 	socklen_t addrlen = sizeof(struct sockaddr_in);
-	int sock;
+	SOCKET sock;
 	static int nextfree = -1;
 
 	if(nextfree == -1) {
@@ -179,8 +179,8 @@ int Net_Lookup(char *host) {
 	return *(int *)hostentry->h_addr_list[0];
 }
 
-int Net_Connect(int haddr, int port) {
-	int sock;
+SOCKET Net_Connect(int haddr, int port) {
+	SOCKET sock;
 	struct sockaddr_in addr;
 
 	if((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1)
@@ -201,7 +201,7 @@ int Net_Connect(int haddr, int port) {
 
 int Net_Send(int sock, char *buf) {
 	int code;
-	int len = strlen(buf) + 1;
+	int len = (int)strlen(buf) + 1;
 	code = send(sock, buf, len, 0);
 	send_total += len;
 	return code;
@@ -256,7 +256,7 @@ int Net_Recv(int sock, char *buf, int len) {
 	while(r < recvpos[i]) {
 		if(!*r) {
 			strlcpy(buf, recvbuf[i], sizeof(buf));
-			rlen = strlen(buf) + 1;
+			rlen = (int)strlen(buf) + 1;
 			memcpy(recvbuf[i], r + 1, recvpos[i] - r);
 			recvpos[i] -= rlen;
 			return rlen;
@@ -294,7 +294,7 @@ int Net_Recv(int sock, char *buf, int len) {
 	return -1;
 }
 
-int Net_Close(int sock) {
+int Net_Close(SOCKET sock) {
 	int i;
 	for(i = 0; i < MAX_LISTEN; i++)
 		if(sock == rsock[i])

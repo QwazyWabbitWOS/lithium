@@ -426,7 +426,7 @@ extern lvar_t *use_chatkick;
 extern lvar_t *use_vwep;
 extern lvar_t *use_packs;
 extern lvar_t *use_highscores;
-
+extern lvar_t* use_startchasecam;
 
 // weapon vars
 extern lvar_t *blaster_damage;

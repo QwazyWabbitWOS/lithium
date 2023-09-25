@@ -166,8 +166,8 @@ void DeathmatchScoreboardMessage (edict_t *ent, edict_t *killer)
 {
 	char	entry[1024];
 	char	string[1400];
-	int		stringlength;
-	int		i, j, k;
+	size_t	stringlength;
+	size_t	i, j, k;
 	//WF
 //	int		sorted[MAX_CLIENTS];
 //	int		sortedscores[MAX_CLIENTS];

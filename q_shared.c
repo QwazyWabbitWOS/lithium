@@ -1260,7 +1260,7 @@ void Info_RemoveKey (char *s, char *key)
 	char	value[512];
 	char	*o;
 	char	*buf;
-	int	buflen;
+	size_t	buflen;
 
 	if (strstr (key, "\\"))
 	{

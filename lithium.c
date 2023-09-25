@@ -1070,7 +1070,7 @@ void Lithium_ClientEndFrame(edict_t *ent) {
 		return;
 
 	if(level.framenum - ent->update_frame > ofp_maxframes->value ||
-			(level.framenum - ent->update_frame) * 500000 /
+			(level.framenum - ent->update_frame) * 500000.f /
 			(int)(ofp_base->value + (float)countplayers() * ofp_perplayer->value) + 1 >
 			(ent->update_size + ent->update_other) * 
 			MIN(MAX(ent->lclient->ping, ofp_minping->value), ofp_maxping->value)) {
@@ -1719,7 +1719,7 @@ char *file_gamedir(char *name) {
 		strlcpy(gdir, gi.cvar("gamedir", "", 0)->string, sizeof(gdir));
 		if(!strlen(gdir))
 			strlcpy(gdir, "baseq2", sizeof(gdir));
-		snprintf(file_gamedir_buffer, sizeof(file_gamedir_buffer), "%s/%s", gdir, name);
+		Com_sprintf(file_gamedir_buffer, sizeof(file_gamedir_buffer), "%s/%s", gdir, name);
 	}
 
 	return file_gamedir_buffer;
@@ -1741,17 +1741,17 @@ qboolean file_exist(char *name) {
 // removing beginning and trailing whitespaces
 void String_Crop(char *str) {
 	char *c;
-	int l;
+	size_t len;
 
-	l = strlen(str)+1;
-	c = gi.TagMalloc(l, TAG_GAME);
+	len = strlen(str)+1;
+	c = gi.TagMalloc((int)len, TAG_GAME);
 	if (!c)
 		return;
-	strlcpy(c, str, l);
+	strlcpy(c, str, len);
 
 	while(*c != '\0' && (*c == ' ' || *c == '\t'))
 		c++;
-	strlcpy(str, c, l);
+	strlcpy(str, c, len);
 	gi.TagFree(c);
 
 	c = str + strlen(str) - 1;
@@ -1774,7 +1774,7 @@ int strip(char *str) {
 
 	String_Crop(str);
 
-	return strlen(str);
+	return (int)strlen(str);
 }
 
 void stuffcmd(edict_t *e, char *s) {

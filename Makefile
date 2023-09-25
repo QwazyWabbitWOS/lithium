@@ -15,10 +15,10 @@ ARCH := $(shell uname -m | sed -e s/i.86/i386/ -e s/sun4u/sparc64/ -e s/arm.*/ar
 CC=gcc
 
 # This is for native build
-CFLAGS=-O3 -DARCH="$(ARCH)"
+CFLAGS = -O3 -DARCH="$(ARCH)"
 # This is for 32-bit build on 64-bit host
-ifeq ($(ARCH),i386)
-CFLAGS =-m32 -O3 -fPIC -DARCH="$(ARCH)" -DSTDC_HEADERS -I/usr/include
+ifeq ($(ARCH), i386)
+CFLAGS += -m32 -DSTDC_HEADERS -I/usr/include
 endif
 
 # use this when debugging
@@ -34,23 +34,7 @@ endif
 
 # This causes a backtrace to be emitted for detected buffer overflows
 # Works only on linux
-# CFLAGS+=-DSTRL_DEBUG_BACKTRACE -rdynamic
-
-# flavors of Linux
-ifeq ($(shell uname), Linux)
-#SVNDEV := -D'SVN_REV="$(shell svnversion -n .)"'
-#CFLAGS += $(SVNDEV)
-CFLAGS += -DLINUX
-LIBTOOL = ldd
-endif
-
-# OS X wants to be Linux and FreeBSD too.
-ifeq ($(shell uname), Darwin)
-#SVNDEV := -D'SVN_REV="$(shell svnversion -n .)"'
-#CFLAGS += $(SVNDEV)
-CFLAGS += -DLINUX
-LIBTOOL = otool
-endif
+#CFLAGS+=-DSTRL_DEBUG_BACKTRACE -rdynamic
 
 LDFLAGS=-ldl -lm
 SHLIBEXT=so
@@ -79,7 +63,6 @@ GAME_OBJS = \
 
 lithium/game$(ARCH).$(SHLIBEXT): $(GAME_OBJS) 
 	$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(GAME_OBJS) $(LDFLAGS)
-	$(LIBTOOL) -r $@
 
 
 #############################################################################
@@ -96,8 +79,8 @@ depends:
 	$(CC) $(CFLAGS) -MM *.c > dependencies
 
 all:
-	make clean
-	make depends
-	make
+	$(MAKE) clean
+	$(MAKE) depends
+	$(MAKE)
 
 -include dependencies
