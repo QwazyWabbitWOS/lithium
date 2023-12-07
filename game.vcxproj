@@ -149,7 +149,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Bscmake>
     <PostBuildEvent>
-      <Command>copy $(OutDir)$(TargetName)$(TargetExt) c:\quake2\lithium\</Command>
+      <Command>copy $(OutDir)$(TargetName)$(TargetExt) $(Q2DIR)\lithium\</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copying DLL $(OutDir)$(TargetName)$(TargetExt)</Message>

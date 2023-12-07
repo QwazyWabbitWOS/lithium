@@ -368,7 +368,7 @@ retry:
 		G_TouchTriggers (ent);
 
 	return trace;
-}					
+}
 
 
 typedef struct
@@ -669,6 +669,8 @@ void SV_Physics_Toss (edict_t *ent)
 
 // regular thinking
 	SV_RunThink (ent);
+	if (!ent->inuse)
+		return;
 
 	// if not a team captain, so movement will be handled elsewhere
 	if ( ent->flags & FL_TEAMSLAVE)
@@ -901,6 +903,8 @@ void SV_Physics_Step (edict_t *ent)
 			mask = MASK_SOLID;
 		SV_FlyMove (ent, FRAMETIME, mask);
 
+		if (!ent->inuse)
+			return;
 		gi.linkentity (ent);
 		G_TouchTriggers (ent);
 		if (!ent->inuse)
