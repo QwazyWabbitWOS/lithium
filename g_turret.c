@@ -133,7 +133,7 @@ void turret_breach_think (edict_t *self)
 	if (delta[1] < -1 * self->speed * FRAMETIME)
 		delta[1] = -1 * self->speed * FRAMETIME;
 
-	VectorScale (delta, 1.0/FRAMETIME, self->avelocity);
+	VectorScale (delta, 1.0f/FRAMETIME, self->avelocity);
 
 	self->nextthink = level.time + FRAMETIME;
 
@@ -155,7 +155,7 @@ void turret_breach_think (edict_t *self)
 
 		// x & y
 		angle = self->s.angles[1] + self->owner->move_origin[1];
-		angle *= (M_PI*2 / 360);
+		angle *= (float)(M_PI*2.0 / 360.0);
 		target[0] = SnapToEights(self->s.origin[0] + cos(angle) * self->owner->move_origin[0]);
 		target[1] = SnapToEights(self->s.origin[1] + sin(angle) * self->owner->move_origin[0]);
 		target[2] = self->owner->s.origin[2];
@@ -261,7 +261,9 @@ void infantry_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int dam
 void infantry_stand (edict_t *self) { }
 //WF
 
-void monster_use (edict_t *self, edict_t *other, edict_t *activator);
+//QW
+// void monster_use (edict_t *self, edict_t *other, edict_t *activator);
+//QW
 
 void turret_driver_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, vec3_t point)
 {
@@ -283,6 +285,9 @@ void turret_driver_die (edict_t *self, edict_t *inflictor, edict_t *attacker, in
 	infantry_die (self, inflictor, attacker, damage);
 }
 
+//QW
+// qboolean FindTarget (edict_t *self);
+//QW
 
 void turret_driver_think (edict_t *self)
 {
@@ -323,11 +328,14 @@ void turret_driver_think (edict_t *self)
 		}
 	}
 
+	if (self->enemy)
+	{
 	// let the turret know where we want it to aim
-	VectorCopy (self->enemy->s.origin, target);
-	target[2] += self->enemy->viewheight;
-	VectorSubtract (target, self->target_ent->s.origin, dir);
-	vectoangles (dir, self->target_ent->move_angles);
+		VectorCopy(self->enemy->s.origin, target);
+		target[2] += self->enemy->viewheight;
+		VectorSubtract(target, self->target_ent->s.origin, dir);
+		vectoangles(dir, self->target_ent->move_angles);
+	}
 
 	// decide if we should shoot
 	if (level.time < self->monsterinfo.attack_finished)

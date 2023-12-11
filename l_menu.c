@@ -103,7 +103,7 @@ void Menu_AddText(edict_t *ent, int line, char *format, ...) {
 	vsnprintf(buf, sizeof(buf), format, argptr);
 	va_end(argptr);
 
-	text = (char *)strdup(buf);
+	text = (char *)G_CopyString(buf);
 
 	Menu_AddLine(ent, MENU_TEXT, line, text, "l");
 	ent->menu->lastline->textp = true;
@@ -427,12 +427,12 @@ void Menu_NextPage(edict_t *ent) {
 
 int countfields(char *edit) {
 	char *c = edit;
-	int fields = 0;
+	int count = 0;
 	while(c) {
 		c = strchr(c + 1, ':');
-		fields++;
+		count++;
 	}
-	return fields;
+	return count;
 }
 
 void Menu_Use(edict_t *ent) {
@@ -458,10 +458,10 @@ void Menu_Use(edict_t *ent) {
 					Menu_EditEnd(ent);
 			}
 			else if(strchr(lvar->edit, ':')) {
-				int fields = countfields(lvar->edit);
+				int field_count = countfields(lvar->edit);
 				char buf[8];
 				int x = lvar->value + 1;
-				if(x >= fields)
+				if(x >= field_count)
 					x = 0;
 				snprintf(buf, sizeof(buf), "%d", x);
 				gi.cvar_set(lvar->cvar->name, buf);
@@ -492,9 +492,9 @@ void Menu_Use(edict_t *ent) {
 					Menu_EditEnd(ent);
 			}
 			else if(strchr(pvar->edit, ':')) {
-				int fields = countfields(pvar->edit);
+				int field_count = countfields(pvar->edit);
 				(*pvar->value)++;
-				if(*pvar->value >= fields)
+				if(*pvar->value >= field_count)
 					*pvar->value = 0;
 			}
 			else if(pvar->edit[0] == '^')

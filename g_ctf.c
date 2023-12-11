@@ -406,7 +406,8 @@ void CTFFragBonuses(edict_t *targ, edict_t *inflictor, edict_t *attacker)
 	edict_t *ent;
 	gitem_t *flag_item, *enemy_flag_item;
 	int otherteam;
-	edict_t *flag, *carrier = NULL;
+	edict_t* flag;
+	edict_t* carrier = NULL;
 	char *c;
 	vec3_t v1, v2;
 
