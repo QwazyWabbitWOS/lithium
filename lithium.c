@@ -1711,17 +1711,37 @@ void CTFSetIDView(edict_t *ent) {
 // misc
 
 char *file_gamedir(char *name) {
+	cvar_t* cv;
+	size_t len;
 	char gdir[256];
 
-	if(strchr(name, '/') || strchr(name, '\\'))
-		strlcpy(file_gamedir_buffer, name, sizeof(file_gamedir_buffer));
+	// obtain game path
+	cv = gi.cvar("fs_gamedir", NULL, 0);
+	if (cv && cv->string[0]) {
+		len = strlcpy(gdir, cv->string, sizeof(gdir));
+	}
 	else {
-		strlcpy(gdir, gi.cvar("gamedir", "", 0)->string, sizeof(gdir));
-		if(!strlen(gdir))
-			strlcpy(gdir, "baseq2", sizeof(gdir));
-		Com_sprintf(file_gamedir_buffer, sizeof(file_gamedir_buffer), "%s/%s", gdir, name);
+		cvar_t* basedir = gi.cvar("basedir", NULL, 0);
+		cvar_t* gamedir = gi.cvar("game", NULL, 0);
+		if (basedir && gamedir) {
+			Com_sprintf(gdir, sizeof(file_gamedir_buffer),
+				"%s/%s", basedir->string, gamedir->string);
+			len = strlen(gdir);
+		}
+		else {
+			len = 0;
+		}
 	}
 
+	if (!len) {
+		gi.dprintf("Failed to determine game directory.\n");
+	}
+	else if (len >= sizeof(file_gamedir_buffer)) {
+		gi.dprintf("Oversize game directory.\n");
+		file_gamedir_buffer[0] = 0;
+	}
+
+	Com_sprintf(file_gamedir_buffer, sizeof(file_gamedir_buffer), "%s/%s", gdir, name);
 	return file_gamedir_buffer;
 }
 
