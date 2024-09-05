@@ -24,7 +24,7 @@
 
 #include "g_local.h"
 
-float lithium_ver = 1.31;
+float lithium_ver = 1.32;
 int lithium_beta = 0;
 
 char lithium_version[16];
@@ -1710,7 +1710,7 @@ void CTFSetIDView(edict_t *ent) {
 // ------------
 // misc
 
-char *file_gamedir(char *name) {
+char* file_gamedir(char* name) {
 	cvar_t* cv;
 	size_t len;
 	char gdir[256];
