@@ -81,6 +81,6 @@ depends:
 all:
 	$(MAKE) clean
 	$(MAKE) depends
-	$(MAKE)
+	$(MAKE) -j
 
 -include dependencies
